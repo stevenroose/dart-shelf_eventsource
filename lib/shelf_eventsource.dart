@@ -47,15 +47,11 @@ Handler eventSourceHandler(EventSourcePublisher publisher,
       // create encoder for this connection
       var encodedSink = new EventSourceEncoder(compressed: useGzip)
           .startChunkedConversion(socketChannel.sink);
-      // create event handler that pushes the event into
-      void onEvent(Event event) {
-        encodedSink.add(event);
-      }
-
+      
       // initialize the new subscription
       publisher.newSubscription(
-          onEvent: onEvent,
-          onClose: sink.close,
+          onEvent: encodedSink.add,
+          onClose: encodedSink.close,
           channel: channel,
           lastEventId: request.headers["Last-Event-ID"]);
     });
