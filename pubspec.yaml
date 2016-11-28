@@ -1,6 +1,6 @@
 name: shelf_eventsource
-description: A shelf handler for Server-Side Events (SSE).
-version: 0.1.0
+description: A shelf handler for Server-Sent Events (SSE).
+version: 0.1.0+1
 author: Steven Roose <stevenroose@gmail.com>
 homepage: https://github.com/stevenroose/dart-shelf_eventsource
 

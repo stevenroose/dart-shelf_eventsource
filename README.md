@@ -1,6 +1,6 @@
 # shelf_eventsource
 
-A shelf extension for EventSource or Server-Side Events (SSE) that works together with the 
+A shelf extension for EventSource or Server-Sent Events (SSE) that works together with the 
 [eventsource](https://pub.dartlang.org/packages/eventsource) package.
 
 
