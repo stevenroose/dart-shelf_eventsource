@@ -1,18 +1,18 @@
 name: shelf_eventsource
 description: A shelf handler for Server-Sent Events (SSE).
-version: 0.1.0+1
+version: 0.2.0-rc1
 author: Steven Roose <stevenroose@gmail.com>
 homepage: https://github.com/stevenroose/dart-shelf_eventsource
 
 environment:
-  sdk: ">=1.0.0 <2.0.0"
+  sdk: ">=1.0.0 <3.0.0"
 
 dependencies:
-  eventsource: ">=0.1.0 <0.2.0"
-  shelf: ">=0.6.5 <0.7.0"
+  eventsource: ">=0.1.0 <0.3.0"
+  shelf: ">=0.6.5 <0.8.0"
   stream_channel: ">=1.5.0 <2.0.0"
 
 dev_dependencies:
-  test: ">=0.12.0 <0.13.0"
+  test: ">=0.12.0 <2.0.0"
   # for the examples:
-  shelf_route: ">=0.13.0 <0.15.0"
+  #shelf_route: ">=0.13.0 <0.15.0"
