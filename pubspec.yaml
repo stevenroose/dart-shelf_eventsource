@@ -5,12 +5,12 @@ author: Steven Roose <stevenroose@gmail.com>
 homepage: https://github.com/stevenroose/dart-shelf_eventsource
 
 environment:
-  sdk: ">=1.0.0 <3.0.0"
+  sdk: ">=2.16.1 <3.0.0"
 
 dependencies:
-  eventsource: ">=0.1.0 <0.3.0"
-  shelf: ">=0.6.5 <0.8.0"
-  stream_channel: ">=1.5.0 <2.0.0"
+  eventsource: ^0.4.0
+  shelf: ^1.3.0
+  shelf_router: ^1.1.2
 
 dev_dependencies:
   test: ">=0.12.0 <2.0.0"
