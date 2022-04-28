@@ -1,49 +1,55 @@
 import "dart:async";
+import 'dart:convert';
 
+import 'package:eventsource/publisher.dart';
 import "package:shelf/shelf_io.dart" as io;
-import "package:shelf_route/shelf_route.dart" as routing;
-
-import "package:eventsource/publisher.dart";
-import "package:shelf_eventsource/shelf_eventsource.dart";
+import 'package:shelf_eventsource/shelf_eventsource.dart';
+import 'package:shelf_router/shelf_router.dart';
 
 main() {
-  // create the publisher object that will manage event publishing to
-  // subscribers
-  EventSourcePublisher publisher = new EventSourcePublisher(cacheCapacity: 100);
+  var app = Router();
 
-  // generate some dummy events
-  generateEvents(publisher);
+  app.get("/events", _handlerEventsWithoutUser);
 
-  // create a shelf handler
-  var handler = eventSourceHandler(publisher);
-  // or create a handler for a specific channel
-  var channelHandler =
-      eventSourceHandler(publisher, channel: "mychannel", gzip: true);
+  app.get("/events/<user>", _handlerEventsWithtUser);
 
-  // create a router to serve the different event sources
-  var router = routing.router();
-  router.get("/events", handler);
-  router.get("/mychannel", channelHandler);
-
-  // serve localhost with our router
-  io.serve(router.handler, "localhost", 8080);
+  io.serve(app, "localhost", 8080);
 }
 
-generateEvents(publisher) {
+_handlerEventsWithoutUser(dynamic r) {
+  final publisher = EventSourcePublisher();
+  generateEvents(publisher);
+  var handler = eventSourceHandler(publisher);
+  handler(r);
+}
+
+_handlerEventsWithtUser(dynamic request, String user) {
+  final publisher = EventSourcePublisher();
+  generateEvents(publisher, user: user);
+  var handler = eventSourceHandler(publisher, channel: user);
+  handler(request);
+}
+
+generateEvents(
+  EventSourcePublisher publisher, {
+  String? user,
+}) {
   int id = 0;
-  new Timer.periodic(const Duration(seconds: 1), (timer) {
-    // publish an event on the default channel
-    publisher
-        .add(new Event.message(id: "$id", data: "Always the same message?"));
-    // publish event in a channel
-    publisher.add(
-        new Event.message(id: "$id", data: "Mychannel Message"), ["mychannel"]);
-    if (id == 25) {
+  Timer.periodic(const Duration(milliseconds: 500), (timer) {
+    final data = json.encode({
+      'id': id,
+      'message': 'event $id',
+      'finished': id == 10,
+      'user': user,
+    });
+    publisher.add(Event(data: data), channels: [user ?? '']);
+
+    if (id == 100) {
       timer.cancel();
-      // broadcast last message to both channels and close them
-      publisher.add(
-          new Event(event: "goodbye", data: "Goodbye all!"), ["", "mychannel"]);
-      publisher.closeAll();
+
+      publisher.close();
     }
+
+    id++;
   });
 }
